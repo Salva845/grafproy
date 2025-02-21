@@ -448,6 +448,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
 try {
+    //Comentario al azar
         float nuevaEscala = Float.parseFloat(jTextField4.getText().trim());
         
         if (nuevaEscala > 0) { 
