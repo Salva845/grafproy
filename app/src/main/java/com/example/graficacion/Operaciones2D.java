@@ -46,7 +46,7 @@ public class Operaciones2D {
         
         resultado.datos[0] = (m33.datos[0][0]*m31.datos[0])+(m33.datos[1][0]*m31.datos[1])+(m33.datos[2][0]*m31.datos[2]);
         resultado.datos[1] = (m33.datos[0][1]*m31.datos[0])+(m33.datos[1][1]*m31.datos[1])+(m33.datos[2][1]*m31.datos[2]);
-        
+        resultado.datos[2] = 1;
         return resultado;
     }
 }

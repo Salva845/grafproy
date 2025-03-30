@@ -717,8 +717,8 @@ try {
             float tx = Floats.tryParse(JTFTx.getText());
             float ty = Floats.tryParse(JTFTy.getText());
 
-            Matriz33 m= Operaciones2D.getMatrizTraslacion(tx, ty);
-            System.out.println(m);
+            Matriz33 m = Operaciones2D.getMatrizTraslacion(tx, ty);
+            figuraSeleccionada.Transformar(m);
             jList2.updateUI();
         }else{
             JOptionPane.showMessageDialog(null, "Seleccione una Figura!!", "Información", JOptionPane.INFORMATION_MESSAGE); 
