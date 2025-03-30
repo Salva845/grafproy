@@ -1,8 +1,9 @@
+package com.example.graficacion;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.example.graficacion;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -15,7 +16,7 @@ import javax.swing.DefaultListModel;
  */
 public class Figura {
     public static float escala = 1.0f;
-    public static float nuevaEscala = -1.0f; 
+    public static float nuevaEscala = 1.0f; 
 
     /**
      * @return the nombre
@@ -55,43 +56,70 @@ public class Figura {
         this.nombre = nombre;
     }
 public void dibujar(ShapeRenderer shpRenderer) {
-    if (getlistaPuntos().getSize() < 1) {
+    int numPuntos = getlistaPuntos().getSize();
+    System.out.println("Dibujando figura: " + nombre + " con " + numPuntos + " puntos");
+    
+    if (numPuntos < 1) {
         return; // Si no hay puntos, no se dibuja nada
     }
 
-    shpRenderer.setColor(Color.WHITE);
-
-    // Dibuja líneas entre los puntos en el orden en que fueron ingresados 
-    for (int i = 0; i < getlistaPuntos().getSize() - 1; i++) { 
-        Punto p1 = getlistaPuntos().getElementAt(i);
-        Punto p2 = getlistaPuntos().getElementAt(i + 1);
-
-        shpRenderer.line(
-            p1.getpX() * Figura.escala, p1.getpY() * Figura.escala,
-            p2.getpX() * Figura.escala, p2.getpY() * Figura.escala
-        );
+    // Dibuja líneas entre los puntos en secuencia circular
+    if (numPuntos > 1) {
+        shpRenderer.setColor(Color.WHITE);
+        
+        // Forzar el modo LINE para asegurar que las líneas se dibujen correctamente
+        ShapeRenderer.ShapeType prevType = shpRenderer.getCurrentType();
+        if (prevType != ShapeRenderer.ShapeType.Line) {
+            shpRenderer.end();
+            shpRenderer.begin(ShapeRenderer.ShapeType.Line);
+        }
+        
+        System.out.println("Dibujando " + numPuntos + " líneas de conexión");
+        
+        // Conecta cada punto con el siguiente en la secuencia
+        for (int i = 0; i < numPuntos; i++) {
+            Punto puntoActual = getlistaPuntos().getElementAt(i);
+            Punto puntoSiguiente = getlistaPuntos().getElementAt((i + 1) % numPuntos);
+            
+            float x1 = puntoActual.getpX() * Figura.escala;
+            float y1 = puntoActual.getpY() * Figura.escala;
+            float x2 = puntoSiguiente.getpX() * Figura.escala;
+            float y2 = puntoSiguiente.getpY() * Figura.escala;
+            
+            System.out.println("Línea " + i + ": (" + x1 + "," + y1 + ") -> (" + x2 + "," + y2 + ")");
+            
+            shpRenderer.line(x1, y1, x2, y2);
+        }
+        
+        // Restaurar el tipo de forma anterior si fue cambiado
+        if (prevType != ShapeRenderer.ShapeType.Line) {
+            shpRenderer.end();
+            shpRenderer.begin(prevType);
+        }
     }
 
-    // Conectar el último punto con el primero para cerrar la figura
-    if (getlistaPuntos().getSize() > 2) { // Solo cerrar la figura si hay al menos 3 puntos
-        Punto primerPunto = getlistaPuntos().getElementAt(0);
-        Punto ultimoPunto = getlistaPuntos().getElementAt(getlistaPuntos().getSize() - 1);
-        shpRenderer.setColor(Color.RED);
-        shpRenderer.rectLine(
-            ultimoPunto.getpX() * Figura.escala, ultimoPunto.getpY() * Figura.escala,
-            primerPunto.getpX() * Figura.escala, primerPunto.getpY() * Figura.escala,
-            5
-        );
-    }
-
-    //  Dibuja los puntos en rojo para asegurarte de que sean visibles
+    // Dibuja los puntos en rojo para asegurarte de que sean visibles
     shpRenderer.setColor(Color.RED);
-    for (int i = 0; i < getlistaPuntos().getSize(); i++) {
+    
+    // Forzar el modo FILLED para dibujar los puntos
+    ShapeRenderer.ShapeType prevType = shpRenderer.getCurrentType();
+    if (prevType != ShapeRenderer.ShapeType.Filled) {
+        shpRenderer.end();
+        shpRenderer.begin(ShapeRenderer.ShapeType.Filled);
+    }
+    
+    for (int i = 0; i < numPuntos; i++) {
         Punto p = getlistaPuntos().getElementAt(i);
         p.Dibujar(shpRenderer);
         
         // Depuración: Mostrar coordenadas de cada punto en la consola
         System.out.println("Punto " + i + ": (" + p.getpX() + ", " + p.getpY() + ")");
+    }
+    
+    // Restaurar el tipo de forma anterior si fue cambiado
+    if (prevType != ShapeRenderer.ShapeType.Filled) {
+        shpRenderer.end();
+        shpRenderer.begin(prevType);
     }
 }
 

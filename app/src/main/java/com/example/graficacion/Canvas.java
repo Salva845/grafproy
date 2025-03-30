@@ -53,13 +53,6 @@ public class Canvas implements ApplicationListener{
     }
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
-                
-        shpRenderer.begin(ShapeRenderer.ShapeType.Filled);      
-        for(int j = 0; j<listaFiguras.size();j++){
-            listaFiguras.get(j).dibujar(shpRenderer);
-            
-        }
-        shpRenderer.end();
         
         shpRenderer.begin(ShapeRenderer.ShapeType.Line);
         shpRenderer.setColor(Color.WHITE);
@@ -73,6 +66,15 @@ public class Canvas implements ApplicationListener{
         }
 
         shpRenderer.end();
+        
+        shpRenderer.begin(ShapeRenderer.ShapeType.Filled);      
+        for(int j = 0; j<listaFiguras.size();j++){
+            listaFiguras.get(j).dibujar(shpRenderer);
+            
+        }
+        shpRenderer.end();
+        
+        
     }
     
     @Override

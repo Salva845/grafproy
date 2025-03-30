@@ -424,6 +424,8 @@ public class MainWindow extends javax.swing.JFrame {
 
             figuraSeleccionada.getlistaPuntos().addElement(p);
         }
+        
+        jPanel2.repaint(); 
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -448,7 +450,6 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
 try {
-    //Comentario al azar
         float nuevaEscala = Float.parseFloat(jTextField4.getText().trim());
         
         if (nuevaEscala > 0) { 
