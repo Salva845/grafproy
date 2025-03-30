@@ -7,7 +7,6 @@ package com.example.graficacion;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
 import javax.swing.DefaultListModel;
 
 /**
@@ -16,7 +15,7 @@ import javax.swing.DefaultListModel;
  */
 public class Figura {
     public static float escala = 1.0f;
-    public static float nuevaEscala = 1.0f; 
+    public static float nuevaEscala = -1.0f; 
 
     /**
      * @return the nombre
@@ -81,10 +80,11 @@ public void dibujar(ShapeRenderer shpRenderer) {
             Punto puntoActual = getlistaPuntos().getElementAt(i);
             Punto puntoSiguiente = getlistaPuntos().getElementAt((i + 1) % numPuntos);
             
-            float x1 = puntoActual.getpX() * Figura.escala;
-            float y1 = puntoActual.getpY() * Figura.escala;
-            float x2 = puntoSiguiente.getpX() * Figura.escala;
-            float y2 = puntoSiguiente.getpY() * Figura.escala;
+            // Aplicar escala correctamente para que 1,1 coincida con la intersección de la cuadrícula
+            float x1 = puntoActual.getpX() * Figura.escala * 100;
+            float y1 = puntoActual.getpY() * Figura.escala * 100;
+            float x2 = puntoSiguiente.getpX() * Figura.escala * 100;
+            float y2 = puntoSiguiente.getpY() * Figura.escala * 100;
             
             System.out.println("Línea " + i + ": (" + x1 + "," + y1 + ") -> (" + x2 + "," + y2 + ")");
             
@@ -110,10 +110,16 @@ public void dibujar(ShapeRenderer shpRenderer) {
     
     for (int i = 0; i < numPuntos; i++) {
         Punto p = getlistaPuntos().getElementAt(i);
-        p.Dibujar(shpRenderer);
+        
+        // Aplicar la misma escala a los puntos
+        float x = p.getpX() * Figura.escala * 100;
+        float y = p.getpY() * Figura.escala * 100;
+        
+        // Dibujar el punto en la posición escalada
+        shpRenderer.circle(x, y, 5); // Usar un círculo de radio 5 para representar el punto
         
         // Depuración: Mostrar coordenadas de cada punto en la consola
-        System.out.println("Punto " + i + ": (" + p.getpX() + ", " + p.getpY() + ")");
+        System.out.println("Punto " + i + ": (" + p.getpX() + ", " + p.getpY() + ") -> Escalado: (" + x + ", " + y + ")");
     }
     
     // Restaurar el tipo de forma anterior si fue cambiado
