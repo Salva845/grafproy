@@ -56,7 +56,6 @@ public class Figura {
     }
 public void dibujar(ShapeRenderer shpRenderer) {
     int numPuntos = getlistaPuntos().getSize();
-    System.out.println("Dibujando figura: " + nombre + " con " + numPuntos + " puntos");
     
     if (numPuntos < 1) {
         return; // Si no hay puntos, no se dibuja nada
@@ -73,7 +72,6 @@ public void dibujar(ShapeRenderer shpRenderer) {
             shpRenderer.begin(ShapeRenderer.ShapeType.Line);
         }
         
-        System.out.println("Dibujando " + numPuntos + " líneas de conexión");
         
         // Conecta cada punto con el siguiente en la secuencia
         for (int i = 0; i < numPuntos; i++) {
@@ -84,10 +82,7 @@ public void dibujar(ShapeRenderer shpRenderer) {
             float x1 = puntoActual.getpX() * Figura.escala * 100;
             float y1 = puntoActual.getpY() * Figura.escala * 100;
             float x2 = puntoSiguiente.getpX() * Figura.escala * 100;
-            float y2 = puntoSiguiente.getpY() * Figura.escala * 100;
-            
-            System.out.println("Línea " + i + ": (" + x1 + "," + y1 + ") -> (" + x2 + "," + y2 + ")");
-            
+            float y2 = puntoSiguiente.getpY() * Figura.escala * 100;          
             shpRenderer.line(x1, y1, x2, y2);
         }
         
@@ -99,7 +94,7 @@ public void dibujar(ShapeRenderer shpRenderer) {
     }
 
     // Dibuja los puntos en rojo para asegurarte de que sean visibles
-    shpRenderer.setColor(Color.RED);
+    shpRenderer.setColor(Color.CYAN);
     
     // Forzar el modo FILLED para dibujar los puntos
     ShapeRenderer.ShapeType prevType = shpRenderer.getCurrentType();
@@ -117,9 +112,6 @@ public void dibujar(ShapeRenderer shpRenderer) {
         
         // Dibujar el punto en la posición escalada
         shpRenderer.circle(x, y, 5); // Usar un círculo de radio 5 para representar el punto
-        
-        // Depuración: Mostrar coordenadas de cada punto en la consola
-        System.out.println("Punto " + i + ": (" + p.getpX() + ", " + p.getpY() + ") -> Escalado: (" + x + ", " + y + ")");
     }
     
     // Restaurar el tipo de forma anterior si fue cambiado
@@ -128,7 +120,14 @@ public void dibujar(ShapeRenderer shpRenderer) {
         shpRenderer.begin(prevType);
     }
 }
-
+    
+    public void Transformar(Matriz33 m_trans){
+        for(int i = 0; i<getlistaPuntos().size();i++){
+            Punto p = getlistaPuntos().get(i);
+            
+            p.Transformar(m_trans);
+        }
+    }
 
     @Override
     public String toString() {

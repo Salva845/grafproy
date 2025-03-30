@@ -49,6 +49,19 @@ public class Punto {
         this.pY = pY;
     }
     
+    public Matriz31 getMatriz(){
+        return new Matriz31(getpX(),getpY(),1);  
+    }
+    
+    public void aplicarMatri(Matriz31 m){
+        setpX(m.datos[0]);
+        setpY(m.datos[1]);
+    }
+    
+    public void Transformar(Matriz33 m_trans){
+        aplicarMatri(Operaciones2D.MuliplicarM33xM31(m_trans, getMatriz()));
+    }
+    
     public void Dibujar(ShapeRenderer shpRenderer){
         shpRenderer.setColor(Color.CYAN);
         shpRenderer.circle(getpX()*Figura.escala, getpY()*Figura.escala, 10);
