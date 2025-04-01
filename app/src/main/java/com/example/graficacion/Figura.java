@@ -65,29 +65,31 @@ public void dibujar(ShapeRenderer shpRenderer) {
     if (numPuntos > 1) {
         shpRenderer.setColor(Color.WHITE);
         
-        // Forzar el modo LINE para asegurar que las líneas se dibujen correctamente
-        ShapeRenderer.ShapeType prevType = shpRenderer.getCurrentType();
-        if (prevType != ShapeRenderer.ShapeType.Line) {
-            shpRenderer.end();
-            shpRenderer.begin(ShapeRenderer.ShapeType.Line);
-        }
+    // Forzar el modo FILLED para que la línea tenga relleno
+    ShapeRenderer.ShapeType prevType = shpRenderer.getCurrentType();
+    if (prevType != ShapeRenderer.ShapeType.Filled) {
+        shpRenderer.end();
+        shpRenderer.begin(ShapeRenderer.ShapeType.Filled);
+    }
         
         
-        // Conecta cada punto con el siguiente en la secuencia
-        for (int i = 0; i < numPuntos; i++) {
-            Punto puntoActual = getlistaPuntos().getElementAt(i);
-            Punto puntoSiguiente = getlistaPuntos().getElementAt((i + 1) % numPuntos);
-            
-            // Aplicar escala correctamente para que 1,1 coincida con la intersección de la cuadrícula
-            float x1 = puntoActual.getpX() * Figura.escala * 100;
-            float y1 = puntoActual.getpY() * Figura.escala * 100;
-            float x2 = puntoSiguiente.getpX() * Figura.escala * 100;
-            float y2 = puntoSiguiente.getpY() * Figura.escala * 100;          
-            shpRenderer.line(x1, y1, x2, y2);
-        }
+    // Conecta cada punto con el siguiente en la secuencia usando rectLine en lugar de line
+    for (int i = 0; i < numPuntos; i++) {
+        Punto puntoActual = getlistaPuntos().getElementAt(i);
+        Punto puntoSiguiente = getlistaPuntos().getElementAt((i + 1) % numPuntos);
+
+        // Aplicar escala correctamente para que 1,1 coincida con la intersección de la cuadrícula
+        float x1 = puntoActual.getpX() * Figura.escala * 50;
+        float y1 = puntoActual.getpY() * Figura.escala * 50;
+        float x2 = puntoSiguiente.getpX() * Figura.escala * 50;
+        float y2 = puntoSiguiente.getpY() * Figura.escala * 50;  
+
+        float anchoLinea = 3; // Ajusta el grosor de la línea según sea necesario
+        shpRenderer.rectLine(x1, y1, x2, y2, anchoLinea);
+    }
         
-        // Restaurar el tipo de forma anterior si fue cambiado
-        if (prevType != ShapeRenderer.ShapeType.Line) {
+        //Restaurar el tipo de forma anterior si fue cambiado
+        if (prevType != ShapeRenderer.ShapeType.Filled) {
             shpRenderer.end();
             shpRenderer.begin(prevType);
         }
@@ -107,11 +109,11 @@ public void dibujar(ShapeRenderer shpRenderer) {
         Punto p = getlistaPuntos().getElementAt(i);
         
         // Aplicar la misma escala a los puntos
-        float x = p.getpX() * Figura.escala * 100;
-        float y = p.getpY() * Figura.escala * 100;
+        float x = p.getpX() * Figura.escala * 50;
+        float y = p.getpY() * Figura.escala * 50;
         
         // Dibujar el punto en la posición escalada
-        shpRenderer.circle(x, y, 5); // Usar un círculo de radio 5 para representar el punto
+        shpRenderer.circle(x, y, 7); // Usar un círculo de radio 5 para representar el punto
     }
     
     // Restaurar el tipo de forma anterior si fue cambiado

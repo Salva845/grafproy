@@ -31,7 +31,7 @@ public class AcercaDe extends javax.swing.JFrame {
             + "el 19 de Febrero del 2025 Como parte de la primera actividad de Graficacion\n"
             + "Hola mundo de parte de Salvador Soberanis");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);

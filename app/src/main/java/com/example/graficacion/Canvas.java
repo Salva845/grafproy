@@ -56,12 +56,12 @@ public class Canvas implements ApplicationListener{
         
         shpRenderer.begin(ShapeRenderer.ShapeType.Line);
         shpRenderer.setColor(Color.WHITE);
-        for (float x = 0; x < Gdx.graphics.getWidth(); x += 100 * Figura.escala) {
+        for (float x = 0; x < Gdx.graphics.getWidth(); x += 50 * Figura.escala) {
             shpRenderer.line(x, 0, x, Gdx.graphics.getHeight());
         }
 
         shpRenderer.setColor(Color.GOLD);
-        for (float y = 0; y < Gdx.graphics.getHeight(); y += 100 * Figura.escala) {
+        for (float y = 0; y < Gdx.graphics.getHeight(); y += 50 * Figura.escala) {
             shpRenderer.line(0, y, Gdx.graphics.getWidth(), y);
         }
 
