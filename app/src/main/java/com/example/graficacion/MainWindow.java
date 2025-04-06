@@ -17,6 +17,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
@@ -30,12 +31,18 @@ public class MainWindow extends javax.swing.JFrame {
     
     Figura figuraSeleccionada = null;
     Punto puntoSeleccionado = null;
+    
+    Preferences prefs;
+    File ultimo_archivo_usado;
     /**
      * Creates new form MainWindow
      */
     public MainWindow() {
         initComponents();
         
+         prefs = Preferences.userNodeForPackage(this.getClass());
+         ultimo_archivo_usado = new File(prefs.get("ULTIMA_RUTA_USADA", ""));
+         
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = "Practica";
         config.width = 1280;
@@ -74,6 +81,7 @@ public class MainWindow extends javax.swing.JFrame {
                 }
             }
         });
+        cargar(ultimo_archivo_usado);
     }
 
     /**
@@ -635,7 +643,7 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        JFileChooser jfc = new JFileChooser();
+        JFileChooser jfc = new JFileChooser(ultimo_archivo_usado);
         if (jfc.showSaveDialog(this)==JFileChooser.APPROVE_OPTION) {
             
         Guardar(jfc.getSelectedFile());
@@ -670,8 +678,10 @@ public class MainWindow extends javax.swing.JFrame {
                     fig.getlistaPuntos().addElement(p);
                 }
                 canvas.listaFiguras.addElement(fig);
+                prefs.put("ULTIMA_RUTA_USADA", f.getPath());
+                ultimo_archivo_usado = f;
                 jList1.updateUI();
-                jList2.updateUI();
+                jList2.updateUI();            
             }
         } catch (FileNotFoundException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error al cargar", JOptionPane.ERROR_MESSAGE);
@@ -692,6 +702,9 @@ public class MainWindow extends javax.swing.JFrame {
             BufferedWriter bw = new BufferedWriter(new FileWriter(archivo));
             bw.append(datos);
             bw.close();
+            
+            prefs.put("ULTIMA_RUTA_USADA", archivo.getPath());
+            ultimo_archivo_usado = archivo;
         } catch (IOException ex) {
             System.err.println(ex.getMessage());
         }
