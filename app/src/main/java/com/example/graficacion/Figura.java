@@ -130,7 +130,17 @@ public void dibujar(ShapeRenderer shpRenderer) {
             p.Transformar(m_trans);
         }
     }
-
+    
+    public String serializar(){
+        String s = getNombre()+",";
+        for (int i = 0; i < getlistaPuntos().size(); i++) {
+            Punto p = getlistaPuntos().get(i);
+            s+= p.getpX()+",";
+            s+= p.getpY()+",";
+        }
+        return s;
+    }
+    
     @Override
     public String toString() {
         return getNombre();

@@ -53,14 +53,15 @@ public class Punto {
         return new Matriz31(getpX(),getpY(),1);  
     }
     
-    public void aplicarMatri(Matriz31 m){
+    public void aplicarMatriz(Matriz31 m){
         setpX(m.datos[0]);
         setpY(m.datos[1]);
     }
     
     public void Transformar(Matriz33 m_trans){
-        aplicarMatri(Operaciones2D.MuliplicarM33xM31(m_trans, getMatriz()));
+        aplicarMatriz(Operaciones2D.MuliplicarM33xM31(m_trans, getMatriz()));
     }
+    
     
     public void Dibujar(ShapeRenderer shpRenderer){
         shpRenderer.setColor(Color.CYAN);
