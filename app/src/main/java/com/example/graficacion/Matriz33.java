@@ -45,5 +45,51 @@ public class Matriz33 {
         }
         return s;
     }
+    public Matriz33 sumar(Matriz33 otra) {
+    Matriz33 resultado = new Matriz33(
+        0, 0, 0,
+        0, 0, 0,
+        0, 0, 0
+    );
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            resultado.datos[i][j] = this.datos[i][j] + otra.datos[i][j];
+        }
+    }
+
+    return resultado;
+}
+
+    public Matriz33 multiplicar(Matriz33 otra) {
+    Matriz33 resultado = new Matriz33(
+        0, 0, 0,
+        0, 0, 0,
+        0, 0, 0
+    );
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            resultado.datos[i][j] = 0;
+            for (int k = 0; k < 3; k++) {
+                resultado.datos[i][j] += this.datos[i][k] * otra.datos[k][j];
+            }
+        }
+    }
+
+    return resultado;
+}
+
     
+    /*
+        Matriz33 a = new Matriz33(1,2,3, 4,5,6, 7,8,9);
+        Matriz33 b = new Matriz33(9,8,7, 6,5,4, 3,2,1);
+
+        Matriz33 suma = a.sumar(b);
+        System.out.println("Suma:\n" + suma);
+
+        Matriz33 producto = a.multiplicar(b);
+        System.out.println("Multiplicación:\n" + producto);
+
+    */
 }
