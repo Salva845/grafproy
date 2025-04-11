@@ -125,10 +125,10 @@ public class MainWindow extends javax.swing.JFrame {
         JTFTy = new javax.swing.JTextField();
         BTNTraslacion = new javax.swing.JButton();
         jPanel9 = new javax.swing.JPanel();
-        jTextField7 = new javax.swing.JTextField();
+        JTFEscaladoX = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jTextField8 = new javax.swing.JTextField();
+        JTFEscaladoY = new javax.swing.JTextField();
         jButton9 = new javax.swing.JButton();
         jPanel10 = new javax.swing.JPanel();
         jTextField9 = new javax.swing.JTextField();
@@ -376,13 +376,18 @@ public class MainWindow extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Traslacion", jPanel8);
 
-        jTextField7.setText("0");
+        JTFEscaladoX.setText("0");
+        JTFEscaladoX.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JTFEscaladoXActionPerformed(evt);
+            }
+        });
 
         jLabel7.setText("Sx:");
 
         jLabel8.setText("Sy:");
 
-        jTextField8.setText("0");
+        JTFEscaladoY.setText("0");
 
         jButton9.setText("Aplicar");
         jButton9.addActionListener(new java.awt.event.ActionListener() {
@@ -401,11 +406,11 @@ public class MainWindow extends javax.swing.JFrame {
                     .addGroup(jPanel9Layout.createSequentialGroup()
                         .addComponent(jLabel7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(JTFEscaladoX, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel9Layout.createSequentialGroup()
                         .addComponent(jLabel8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(JTFEscaladoY, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jButton9))
                 .addContainerGap(328, Short.MAX_VALUE))
         );
@@ -415,11 +420,11 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(JTFEscaladoX, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(JTFEscaladoY, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton9)
                 .addContainerGap(128, Short.MAX_VALUE))
@@ -811,7 +816,16 @@ try {
     }//GEN-LAST:event_BTNTraslacionActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        // TODO add your handling code here:
+        if(figuraSeleccionada != null){
+            float tx = Floats.tryParse(JTFEscaladoX.getText());
+            float ty = Floats.tryParse(JTFEscaladoY.getText());
+
+             Matriz33 escalado = Operaciones2D.getMatrizEscalado(tx, ty);
+            figuraSeleccionada.Transformar(escalado);
+            jList2.updateUI();
+        }else{
+            JOptionPane.showMessageDialog(null, "Seleccione una Figura!!", "Información", JOptionPane.INFORMATION_MESSAGE); 
+        }
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
@@ -825,6 +839,10 @@ try {
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton12ActionPerformed
+
+    private void JTFEscaladoXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JTFEscaladoXActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_JTFEscaladoXActionPerformed
 
     /**
      * @param args the command line arguments
@@ -870,6 +888,8 @@ try {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BTNTraslacion;
+    private javax.swing.JTextField JTFEscaladoX;
+    private javax.swing.JTextField JTFEscaladoY;
     private javax.swing.JTextField JTFTx;
     private javax.swing.JTextField JTFTy;
     private javax.swing.JButton jButton1;
@@ -925,8 +945,6 @@ try {
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField jTextField9;
     // End of variables declaration//GEN-END:variables
 }

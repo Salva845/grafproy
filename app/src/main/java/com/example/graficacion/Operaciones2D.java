@@ -19,11 +19,13 @@ public class Operaciones2D {
         m.datos[2][1]=ty;
         return m;
     }
-    public static Matriz33 getMatrizEscalado(float sx,float sy){
-        Matriz33 m = getMatrizIdentidad();
-        //logica pendiente
-        return m;
-    }
+    public static Matriz33 getMatrizEscalado(float sx, float sy){
+    Matriz33 m = getMatrizIdentidad();
+    m.datos[0][0] = sx;
+    m.datos[1][1] = sy;
+    return m;
+}
+
     
     public static Matriz33 getMatrizRotacion(float angulo){
         Matriz33 m = getMatrizIdentidad();
