@@ -131,7 +131,7 @@ public class MainWindow extends javax.swing.JFrame {
         JTFEscaladoY = new javax.swing.JTextField();
         jButton9 = new javax.swing.JButton();
         jPanel10 = new javax.swing.JPanel();
-        jTextField9 = new javax.swing.JTextField();
+        JTXAngulo = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jButton10 = new javax.swing.JButton();
         jPanel11 = new javax.swing.JPanel();
@@ -432,7 +432,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Escalado", jPanel9);
 
-        jTextField9.setText("0");
+        JTXAngulo.setText("0");
 
         jLabel9.setText("Angulo");
 
@@ -453,7 +453,7 @@ public class MainWindow extends javax.swing.JFrame {
                     .addGroup(jPanel10Layout.createSequentialGroup()
                         .addComponent(jLabel9)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(JTXAngulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jButton10))
                 .addContainerGap(304, Short.MAX_VALUE))
         );
@@ -463,7 +463,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
-                    .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(JTXAngulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton10)
                 .addContainerGap(162, Short.MAX_VALUE))
@@ -829,7 +829,15 @@ try {
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
-        // TODO add your handling code here:
+        if(figuraSeleccionada != null){
+            float angulo = Floats.tryParse(JTXAngulo.getText());
+
+             Matriz33 rotacion = Operaciones2D.getMatrizRotacion(angulo);
+            figuraSeleccionada.Transformar(rotacion);
+            jList2.updateUI();
+        }else{
+            JOptionPane.showMessageDialog(null, "Seleccione una Figura!!", "Información", JOptionPane.INFORMATION_MESSAGE); 
+        }
     }//GEN-LAST:event_jButton10ActionPerformed
 
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
@@ -892,6 +900,7 @@ try {
     private javax.swing.JTextField JTFEscaladoY;
     private javax.swing.JTextField JTFTx;
     private javax.swing.JTextField JTFTy;
+    private javax.swing.JTextField JTXAngulo;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
@@ -945,6 +954,5 @@ try {
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField9;
     // End of variables declaration//GEN-END:variables
 }
