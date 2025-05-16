@@ -8,8 +8,16 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
+import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import javax.swing.DefaultListModel;
 
@@ -23,9 +31,19 @@ public class Canvas implements ApplicationListener{
     BitmapFont bmpFont;
     ShapeRenderer shpRenderer;
 
+    MainWindow padre;
+    
+    //Para 3d
+    Environment enviroment;
+    ModelBatch modelbatch;
+    PerspectiveCamera camera;
+    ModelBuilder builder;
+    CameraInputController camInput;
+    
     DefaultListModel<Figura> listaFiguras;
     
-    public Canvas() {
+    public Canvas(MainWindow padre) {
+        this.padre = padre;
         listaFiguras = new DefaultListModel<>();
     }
     
@@ -36,16 +54,30 @@ public class Canvas implements ApplicationListener{
         sptBatch = new SpriteBatch();
         bmpFont = new BitmapFont();
         shpRenderer = new ShapeRenderer();
+        
+        //Inicializar entorno
+        enviroment = new Environment();
+        enviroment.set(new ColorAttribute(ColorAttribute.AmbientLight,0.4f,0.4f,0.4f,1f));
+        enviroment.add(new DirectionalLight().set(0.8f,0.8f,0.8f,-1f,-0.8f,-0.2f));
+        
+        //Luces y propiedades del ambiente
+        DefaultShader.Config shader_config = new DefaultShader.Config();
+        shader_config.numDirectionalLights = 1;
+        shader_config.numPointLights = 0;
+        shader_config.numBones = 16;
+        
+        modelbatch = new ModelBatch();
+        camera = new PerspectiveCamera();
+        builder = new ModelBuilder();
+        camInput = new CameraInputController(camera);
     }
 
     @Override
     public void resize(int i, int i1) {
         System.out.println("Tamaño "+ i +", "+i1);
     }
-    float i =0;
-   
-    @Override
-    public void render() {
+    
+    public void render2D(){
         if (Figura.nuevaEscala > 0) { 
         Figura.escala = Figura.nuevaEscala;
         Figura.nuevaEscala = -1; 
@@ -73,8 +105,19 @@ public class Canvas implements ApplicationListener{
             
         }
         shpRenderer.end();
-        
-        
+    }
+    
+    public void render3D(){
+        Gdx.gl.glClearColor(1f, 0f, 0f, 1f);
+        Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT); 
+    }
+    
+    @Override
+    public void render() {
+        if(padre.radio2d.isSelected())
+            render2D();
+        else 
+            render3D();
     }
     
     @Override
