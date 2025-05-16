@@ -9,14 +9,20 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.VertexAttribute;
+import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
+import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import javax.swing.DefaultListModel;
@@ -47,6 +53,9 @@ public class Canvas implements ApplicationListener{
         listaFiguras = new DefaultListModel<>();
     }
     
+    Model m1;
+    ModelInstance m1Instance;
+    
     @Override
     public void create() {
         System.out.println("Creado");
@@ -66,10 +75,29 @@ public class Canvas implements ApplicationListener{
         shader_config.numPointLights = 0;
         shader_config.numBones = 16;
         
-        modelbatch = new ModelBatch();
-        camera = new PerspectiveCamera();
+        //Inicializar Model Batch
+        modelbatch = new ModelBatch(new DefaultShaderProvider(shader_config));
+        
+        //Incializar Camara
+        camera = new PerspectiveCamera(67,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+        camera.position.set(10f,10f,10f);
+        camera.lookAt(0,0,0);
+        camera.near = 1f;
+        camera.far = 300f;
+        camera.update();
+        
+        
+        //Inicializar ModelBuilder
         builder = new ModelBuilder();
+        /////
         camInput = new CameraInputController(camera);
+        Gdx.input.setInputProcessor(camInput);
+        
+        m1 = builder.createBox(5, 2, 4, 
+                new Material(ColorAttribute.createDiffuse(Color.GOLD)),//color
+                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+        
+        m1Instance = new ModelInstance(m1);
     }
 
     @Override
@@ -108,8 +136,15 @@ public class Canvas implements ApplicationListener{
     }
     
     public void render3D(){
-        Gdx.gl.glClearColor(1f, 0f, 0f, 1f);
-        Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT); 
+        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT); 
+        
+        modelbatch.begin(camera);
+        modelbatch.render(m1Instance,enviroment);
+        modelbatch.end();
+        
+        camera.update();
+        camInput.update();
     }
     
     @Override
