@@ -6,6 +6,7 @@ package com.example.graficacion;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglAWTCanvas;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.graphics.Color;
 import com.formdev.flatlaf.FlatDarculaLaf;
 import com.google.common.primitives.Floats;
 import java.io.BufferedReader;
@@ -18,6 +19,8 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
@@ -31,6 +34,8 @@ public class MainWindow extends javax.swing.JFrame {
     
     Figura figuraSeleccionada = null;
     Punto puntoSeleccionado = null;
+    
+    Figura3D figura3DSeleccionada = null;
     
     Preferences prefs;
     File ultimo_archivo_usado;
@@ -55,6 +60,7 @@ public class MainWindow extends javax.swing.JFrame {
         LwjglAWTCanvas panelcanvas= new LwjglAWTCanvas(canvas, config);
         jPanel2.add(panelcanvas.getCanvas());
         
+        //LLenar listas de Figuras2D
         jList1.setModel(canvas.listaFiguras);
         
         jList1.addListSelectionListener(new ListSelectionListener() {
@@ -81,8 +87,47 @@ public class MainWindow extends javax.swing.JFrame {
                 }
             }
         });
+        
+        //Llenar Lista de Figuras3D
+        jList3.setModel(canvas.listaFiguras3D);
+        jList3.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent lse) {
+                figura3DSeleccionada = jList3.getSelectedValue();
+                
+                if (figura3DSeleccionada != null) {
+                    jTextField8.setText(figura3DSeleccionada.getNombre());
+                    jTextField5.setText(""+figura3DSeleccionada.getsX());
+                    jTextField6.setText(""+figura3DSeleccionada.getsY());
+                    jTextField7.setText(""+figura3DSeleccionada.getsZ());
+                    
+                    
+                   com.badlogic.gdx.graphics.Color colorLibGDX = figura3DSeleccionada.getColor();
+                    java.awt.Color colorAWT = new java.awt.Color(
+                        (int) (colorLibGDX.r * 255),
+                        (int) (colorLibGDX.g * 255),
+                        (int) (colorLibGDX.b * 255),
+                        (int) (colorLibGDX.a * 255)
+                    );
+                    jButton18.setBackground(colorAWT);
+                    
+                    jComboBox1.setSelectedItem(figura3DSeleccionada.getTipos());
+                    
+                }else{
+                    jTextField8.setText("");
+                    jTextField5.setText("");
+                    jTextField6.setText("");
+                    jTextField7.setText("");
+                }
+        
+               }
+        });
+        DefaultComboBoxModel <Figura3D.TiposFigura> combo_model = new DefaultComboBoxModel<>();
+        for(Figura3D.TiposFigura t : Figura3D.TiposFigura.values()) combo_model.addElement(t);
+        jComboBox1.setModel(combo_model);
         cargar(ultimo_archivo_usado);
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -162,8 +207,9 @@ public class MainWindow extends javax.swing.JFrame {
         BtnDown = new javax.swing.JButton();
         BtnRight = new javax.swing.JButton();
         jPanel20 = new javax.swing.JPanel();
-        jButton16 = new javax.swing.JButton();
-        jButton17 = new javax.swing.JButton();
+        BtnBack = new javax.swing.JButton();
+        BtnFront = new javax.swing.JButton();
+        BtnReset1 = new javax.swing.JButton();
         jPanel21 = new javax.swing.JPanel();
         jSplitPane2 = new javax.swing.JSplitPane();
         jPanel22 = new javax.swing.JPanel();
@@ -236,11 +282,10 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(jPanel12Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel12Layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 596, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(jPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, 596, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jPanel12Layout.setVerticalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -750,14 +795,21 @@ public class MainWindow extends javax.swing.JFrame {
             .addGap(0, 70, Short.MAX_VALUE)
         );
 
-        jButton16.setText("Frente");
-        jButton16.addActionListener(new java.awt.event.ActionListener() {
+        BtnBack.setText("Frente");
+        BtnBack.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton16ActionPerformed(evt);
+                BtnBackActionPerformed(evt);
             }
         });
 
-        jButton17.setText("Atras");
+        BtnFront.setText("Atras");
+
+        BtnReset1.setText("Camara Reset");
+        BtnReset1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnReset1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel17Layout = new javax.swing.GroupLayout(jPanel17);
         jPanel17.setLayout(jPanel17Layout);
@@ -783,28 +835,30 @@ public class MainWindow extends javax.swing.JFrame {
                                 .addComponent(jPanel18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(65, 65, 65)
                         .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton16)
-                            .addComponent(jButton17))))
+                            .addComponent(BtnBack)
+                            .addComponent(BtnFront)
+                            .addComponent(BtnReset1))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel17Layout.setVerticalGroup(
             jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel17Layout.createSequentialGroup()
                 .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel19, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(BtnUp, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel17Layout.createSequentialGroup()
-                        .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel19, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(BtnUp, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPanel18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(BtnLeft, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(BtnDown, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(BtnRight, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(20, 20, 20)
+                        .addComponent(BtnReset1)))
+                .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel17Layout.createSequentialGroup()
-                        .addGap(68, 68, 68)
-                        .addComponent(jButton17)
+                        .addComponent(BtnBack)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton16)))
+                        .addComponent(BtnFront))
+                    .addComponent(BtnLeft, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(BtnDown, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(BtnRight, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -825,14 +879,12 @@ public class MainWindow extends javax.swing.JFrame {
         );
 
         jPanel21.setBorder(javax.swing.BorderFactory.createTitledBorder("Figuras 3D"));
-        jPanel21.setLayout(new java.awt.GridLayout(1, 0));
+        jPanel21.setLayout(new java.awt.GridLayout());
 
         jSplitPane2.setDividerLocation(200);
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
         jLabel17.setText("Tipo");
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jTextField5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -851,6 +903,11 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel16.setText("Color");
 
         jButton18.setText("Color");
+        jButton18.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton18ActionPerformed(evt);
+            }
+        });
 
         jButton19.setText("Agregar");
         jButton19.addActionListener(new java.awt.event.ActionListener() {
@@ -860,6 +917,11 @@ public class MainWindow extends javax.swing.JFrame {
         });
 
         jButton20.setText("Eliminar");
+        jButton20.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton20ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel22Layout = new javax.swing.GroupLayout(jPanel22);
         jPanel22.setLayout(jPanel22Layout);
@@ -898,7 +960,7 @@ public class MainWindow extends javax.swing.JFrame {
                                 .addComponent(jButton19)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jButton20)))))
-                .addContainerGap(272, Short.MAX_VALUE))
+                .addContainerGap(267, Short.MAX_VALUE))
         );
         jPanel22Layout.setVerticalGroup(
             jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -927,20 +989,15 @@ public class MainWindow extends javax.swing.JFrame {
                 .addGroup(jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel17)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton19)
-                    .addComponent(jButton20))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton20)
+                    .addComponent(jButton19))
+                .addContainerGap(137, Short.MAX_VALUE))
         );
 
         jSplitPane2.setBottomComponent(jPanel22);
 
-        jList3.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane3.setViewportView(jList3);
 
         jSplitPane2.setLeftComponent(jScrollPane3);
@@ -963,8 +1020,8 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(jPanel15Layout.createSequentialGroup()
                 .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(jPanel21, javax.swing.GroupLayout.DEFAULT_SIZE, 543, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jTabbedPane3.addTab("Figuras", jPanel15);
@@ -1265,17 +1322,46 @@ try {
         // TODO add your handling code here:
     }//GEN-LAST:event_BtnDownActionPerformed
 
-    private void jButton16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton16ActionPerformed
+    private void BtnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBackActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton16ActionPerformed
+    }//GEN-LAST:event_BtnBackActionPerformed
 
     private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField5ActionPerformed
 
     private void jButton19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton19ActionPerformed
-        // TODO add your handling code here:
+        String Nombre = jTextField8.getText();
+        float sX = Floats.tryParse(jTextField5.getText());
+        float sY = Floats.tryParse(jTextField6.getText());
+        float sZ = Floats.tryParse(jTextField7.getText());
+        Figura3D.TiposFigura tipos = (Figura3D.TiposFigura)jComboBox1.getSelectedItem();
+        java.awt.Color c1 = jButton18.getBackground();
+        Color color = new Color(c1.getRed(),c1.getGreen(),c1.getBlue(),c1.getAlpha()); 
+        
+        Figura3D figura3d = new Figura3D(Nombre, sX, sY, sZ, color, tipos);
+        canvas.listaFiguras3D.addElement(figura3d);
     }//GEN-LAST:event_jButton19ActionPerformed
+
+    private void BtnReset1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnReset1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_BtnReset1ActionPerformed
+
+    private void jButton18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton18ActionPerformed
+        JColorChooser jcc = new JColorChooser();
+        if(JOptionPane.showConfirmDialog(this, jcc, "Seleccione un Color", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION){
+            java.awt.Color color = jcc.getColor();
+            jButton18.setBackground(color);
+        }
+
+    }//GEN-LAST:event_jButton18ActionPerformed
+
+    private void jButton20ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton20ActionPerformed
+        if (figura3DSeleccionada != null) {
+            canvas.listaFiguras3D.removeElement(figura3DSeleccionada);
+            jList3.updateUI();
+        }
+    }//GEN-LAST:event_jButton20ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1321,8 +1407,11 @@ try {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BTNTraslacion;
+    public javax.swing.JButton BtnBack;
     public javax.swing.JButton BtnDown;
+    public javax.swing.JButton BtnFront;
     public javax.swing.JButton BtnLeft;
+    public javax.swing.JButton BtnReset1;
     public javax.swing.JButton BtnRight;
     public javax.swing.JButton BtnUp;
     private javax.swing.JTextField JTFEscaladoX;
@@ -1337,8 +1426,6 @@ try {
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
-    public javax.swing.JButton jButton16;
-    public javax.swing.JButton jButton17;
     private javax.swing.JButton jButton18;
     private javax.swing.JButton jButton19;
     private javax.swing.JButton jButton2;
@@ -1349,7 +1436,7 @@ try {
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton9;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<Figura3D.TiposFigura> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1369,7 +1456,7 @@ try {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JList<Figura> jList1;
     private javax.swing.JList<Punto> jList2;
-    private javax.swing.JList<String> jList3;
+    private javax.swing.JList<Figura3D> jList3;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;

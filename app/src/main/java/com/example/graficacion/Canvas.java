@@ -47,15 +47,15 @@ public class Canvas implements ApplicationListener{
     CameraInputController camInput;
     
     DefaultListModel<Figura> listaFiguras;
-    
+    DefaultListModel<Figura3D> listaFiguras3D;
+      
     public Canvas(MainWindow padre) {
         this.padre = padre;
         listaFiguras = new DefaultListModel<>();
+        listaFiguras3D = new DefaultListModel<>();
     }
     
-    Model m1;
-    ModelInstance m1Instance;
-    
+  
     @Override
     public void create() {
         System.out.println("Creado");
@@ -80,7 +80,7 @@ public class Canvas implements ApplicationListener{
         
         //Incializar Camara
         camera = new PerspectiveCamera(67,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
-        camera.position.set(10f,10f,10f);
+        camera.position.set(5f,10f,-10f);
         camera.lookAt(0,0,0);
         camera.near = 1f;
         camera.far = 300f;
@@ -93,11 +93,7 @@ public class Canvas implements ApplicationListener{
         camInput = new CameraInputController(camera);
         Gdx.input.setInputProcessor(camInput);
         
-        m1 = builder.createBox(5, 2, 4, 
-                new Material(ColorAttribute.createDiffuse(Color.GOLD)),//color
-                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
         
-        m1Instance = new ModelInstance(m1);
     }
 
     @Override
@@ -139,8 +135,37 @@ public class Canvas implements ApplicationListener{
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT); 
         
-        modelbatch.begin(camera);
-        modelbatch.render(m1Instance,enviroment);
+        if (padre.BtnReset1.getModel().isPressed()) {
+        // Resetear la cámara a su posición y objetivo inicial.
+        camera.position.set(5f, 10f, -10f);
+        camera.lookAt(0f, 0f, 0f);
+        camera.update();
+
+        }
+
+
+        if(padre.BtnUp.getModel().isPressed()){
+            camera.position.y -= 0.1;
+        }else if(padre.BtnDown.getModel().isPressed()){
+            camera.position.y += 0.1;
+        } else if(padre.BtnRight.getModel().isPressed()){
+            camera.position.x += 0.1;
+        }else if(padre.BtnLeft.getModel().isPressed()){
+            camera.position.x -= 0.1;
+        }else if(padre.BtnFront.getModel().isPressed()){
+            camera.position.z += 0.1;
+        }else if(padre.BtnBack.getModel().isPressed()){
+            camera.position.z -= 0.1;
+        }
+        
+        modelbatch.begin(camera);        
+        for (int i = 0; i < listaFiguras3D.getSize(); i++) {
+            Figura3D f3d = listaFiguras3D.get(i);
+            if(!f3d.isInicializado()){
+                    f3d.inicializar(builder);
+            }
+            f3d.Dibujar(modelbatch, enviroment);
+        }
         modelbatch.end();
         
         camera.update();
