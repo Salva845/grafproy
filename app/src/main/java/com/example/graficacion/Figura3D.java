@@ -59,12 +59,12 @@ public class Figura3D {
                break;
            case CILINDRO:
                m1 = builder.createCylinder(5, 2, 4,16, 
-                new Material(ColorAttribute.createDiffuse(Color.GOLD)),//color
+                new Material(ColorAttribute.createDiffuse(this.color)),//color
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
                break;
            case CONO:
                m1 = builder.createCone(5, 2, 4,16,
-                new Material(ColorAttribute.createDiffuse(Color.GOLD)),//color
+                new Material(ColorAttribute.createDiffuse(this.color)),//color
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
                break;
            default:
